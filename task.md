@@ -1,0 +1,43 @@
+# Tasks
+
+- [x] Planning and Setup
+    - [x] Create implementation plan <!-- id: 0 -->
+    - [x] Define project structure and dependencies <!-- id: 1 -->
+- [x] Game Implementation
+    - [x] Implement Arkanoid game logic (Paddle, Ball, Bricks) using Pygame <!-- id: 2 -->
+    - [x] Add pixel observation support (getting screen array) <!-- id: 3 -->
+- [x] RL Environment
+    - [x] Create Gymnasium environment wrapper <!-- id: 4 -->
+    - [x] Define observation space (pixels) and action space <!-- id: 5 -->
+- [x] RL Agent
+    - [x] Set up training script using Stable Baselines3 (PPO/DQN) <!-- id: 6 -->
+    - [x] Implement evaluation/visualization script <!-- id: 7 -->
+- [x] Verification
+    - [x] Verify game is playable manually <!-- id: 8 -->
+    - [x] Verify environment integration <!-- id: 9 -->
+    - [x] Run training loop <!-- id: 10 -->
+- [x] Optimization
+    - [x] Resize and grayscale observations (84x84) <!-- id: 11 -->
+    - [x] Tune PPO hyperparameters (n_steps, batch_size) <!-- id: 12 -->
+    - [x] Adjust reward structure <!-- id: 13 -->
+    - [x] Retrain agent <!-- id: 14 -->
+- [x] CUDA Support
+    - [x] Configure training to use CUDA <!-- id: 15 -->
+    - [x] Configure evaluation to use CUDA <!-- id: 16 -->
+- [x] Resource Optimization
+    - [x] Implement SubprocVecEnv for parallel environments (N=8/16) <!-- id: 17 -->
+    - [x] Tune hyperparameters for parallel execution <!-- id: 18 -->
+- [x] Imitation Learning
+    - [x] Create script to record human demonstrations <!-- id: 19 -->
+    - [x] Implement Behavioral Cloning (pre-training) script <!-- id: 20 -->
+    - [x] Integrate pre-trained model into RL training <!-- id: 21 -->
+    - [x] Update record_demo.py to support multiple files <!-- id: 22 -->
+    - [x] Implement HumanFeedbackCallback for online BC <!-- id: 23 -->
+    - [x] Update train.py to use the callback <!-- id: 24 -->
+- [ ] Visualization
+    - [x] Add matplotlib to requirements <!-- id: 25 -->
+    - [x] Implement PlottingCallback for real-time charts <!-- id: 26 -->
+    - [x] Implement PlottingCallback for real-time charts <!-- id: 26 -->
+    - [x] Integrate PlottingCallback into train.py <!-- id: 27 -->
+- [x] Refinement
+    - [x] Add distance-based reward when ball is lost <!-- id: 28 -->

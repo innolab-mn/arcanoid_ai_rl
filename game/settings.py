@@ -1,0 +1,30 @@
+# Screen dimensions
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 800
+FPS = 60
+
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+ORANGE = (255, 165, 0)
+
+# Paddle settings
+PADDLE_WIDTH = 100
+PADDLE_HEIGHT = 20
+PADDLE_SPEED = 6
+PADDLE_Y_OFFSET = 50  # Distance from bottom
+
+# Ball settings
+BALL_RADIUS = 7
+BALL_SPEED = 5
+
+# Brick settings
+BRICK_ROWS = 6
+BRICK_COLS = 10
+BRICK_HEIGHT = 30
+BRICK_PADDING = 5
+BRICK_OFFSET_TOP = 60

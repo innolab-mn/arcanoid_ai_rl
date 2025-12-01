@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.pkl
+logs/
+models/
+data/
+.DS_Store
+.vscode/
