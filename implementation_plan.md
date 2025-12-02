@@ -1,72 +1,35 @@
-# Arkanoid RL Agent Implementation Plan
+# Implementation Plan - Arkanoid RL Optimization
 
-## Goal Description
-Create a fully functional Arkanoid (Breakout) game using Pygame and train a Reinforcement Learning (RL) agent to play it using pixel-based observations.
+## Goal
+Optimize the Arkanoid RL agent by fixing flawed reward logic and tuning PPO hyperparameters for better stability and faster convergence.
 
 ## User Review Required
-> [!NOTE]
-> We will use `stable-baselines3` for the RL agent as it provides robust implementations of PPO and DQN.
-> The game will be built with `pygame`.
-> The environment will be wrapped using `gymnasium`.
+> [!IMPORTANT]
+> **Reward Logic Change**: The previous logic gave a *positive* reward (up to +5) when the ball was lost if the paddle was close. This could incentivize losing the ball. I am changing this to a **penalty** (-10) with a small "consolation" bonus (max +2) for being close, ensuring the net result is always negative (-8 to -10).
 
 ## Proposed Changes
 
-### Project Structure
-```
-arkanoid_rl/
-├── game/
-│   ├── arkanoid.py      # Core game logic
-│   └── settings.py      # Game constants (screen size, colors, etc.)
-├── env/
-│   └── arkanoid_env.py  # Gymnasium wrapper
-├── agent/
-│   └── train.py         # Training script
-├── requirements.txt
-└── main.py              # Entry point for manual play or training
-```
+### Game Logic (`game/arkanoid.py`)
+#### [MODIFY] [arkanoid.py](file:///home/tsogoo/work/game_rl/arkanoid/game/arkanoid.py)
+- **Paddle Hit Reward**: Increase from +0.2 to **+1.0** (Stronger incentive to keep ball alive).
+- **Brick Hit Reward**: Increase from +0.5 to **+5.0** (Stronger incentive to win).
+- **Win Reward**: Set to fixed **+1000.0**.
+- **Lose Life Penalty**: Set to **-10.0**.
+- **Distance Bonus**: Keep logic but scale it so it reduces the penalty rather than overcoming it. Max bonus +2.0.
+    - Net reward on death: -10 (base) + [0 to 2] (dist) = **-10 to -8**.
 
-### Game Implementation (`game/`)
-- **`settings.py`**: Define screen dimensions (e.g., 600x800), colors, brick layout.
-- **`arkanoid.py`**:
-    - `Game` class: Manages game loop, state, and rendering.
-    - `Paddle`, `Ball`, `Brick` classes.
-    - `step(action)` method: Updates game state based on action (Left, Right, None).
-    - `get_state()` method: Returns the current screen pixel array.
-    - `reset()` method: Resets the game.
-
-### RL Environment (`env/`)
-- **`arkanoid_env.py`**:
-    - Inherits from `gymnasium.Env`.
-    - `observation_space`: `Box(low=0, high=255, shape=(H, W, 3), dtype=uint8)`.
-    - `action_space`: `Discrete(3)` (Left, Right, Stay).
-    - `reset()`: Calls game reset.
-    - `step()`: Calls game step, calculates reward (score increase), checks done condition.
-    - `render()`: Renders the pygame window.
-
-### RL Agent (`agent/`)
-- **`train.py`**:
-    - Sets up the environment.
-    - Wraps env in `VecFrameStack` or similar if needed (though SB3 handles some of this, explicit stacking is good for motion).
-    - Initializes PPO or DQN model.
-    - Runs training loop.
-    - Saves the model.
-
-### Optimization
-- **Observation Preprocessing**: Resize to 84x84 and grayscale in `arkanoid_env.py`.
-- **Hyperparameter Tuning**: Increase `n_steps` to 2048, `batch_size` to 64.
-- **Reward Shaping**: Increase rewards for hitting bricks and paddle.
-- **CUDA Support**: Enable GPU acceleration.
-- **Resource Optimization**: Use `SubprocVecEnv` for parallel environments.
-- **Imitation Learning**: Implement `record_demo.py` and `pretrain.py` for Behavioral Cloning.
-- **Interactive Training**: Implement `HumanFeedbackCallback` to enable online learning from human demonstrations.
-- **Real-time Charts**: Implement `PlottingCallback` to visualize training metrics using Matplotlib.
+### Training Script (`agent/train.py`)
+#### [MODIFY] [train.py](file:///home/tsogoo/work/game_rl/arkanoid/agent/train.py)
+- **Learning Rate**: Increase to **2.5e-4** (Standard for Atari-style CNNs).
+- **Entropy Coefficient**: Increase to **0.01** (More exploration).
+- **n_steps**: Reduce to **1024** (Faster updates).
+- **batch_size**: Set to **2048**.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `main.py --mode manual` to verify game physics and playability.
-- Run `check_env` from `stable_baselines3.common.env_checker` to validate the Gym environment.
-- Run `train.py` for a short number of timesteps to ensure the training loop runs without errors.
+- Run `python3 agent/train.py --test` to verify the training loop starts without errors and rewards are logged correctly.
+- Run `python3 game/arkanoid.py` manually to check if the game feels right (though rewards are internal).
 
 ### Manual Verification
-- Watch the agent play after a few training iterations (or during training via render).
+- Inspect the training logs (printed to stdout) to see if `ep_rew_mean` increases faster than before.

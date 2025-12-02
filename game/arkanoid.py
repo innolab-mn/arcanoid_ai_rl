@@ -95,7 +95,7 @@ class ArkanoidGame:
         self._create_bricks()
         
         self.score = 0
-        self.lives = 3
+        self.lives = 1
         self.game_over = False
         self.won = False
         
@@ -126,7 +126,7 @@ class ArkanoidGame:
         if pygame.sprite.collide_rect(self.ball, self.paddle):
             self.ball.speed_y *= -1
             self.ball.rect.bottom = self.paddle.rect.top
-            reward += 2 # Reward for hitting the ball
+            reward += 0.2 # Reward for hitting the ball
             
             # Add paddle velocity effect
             # If moving left, add leftward velocity. If right, add rightward.
@@ -143,11 +143,11 @@ class ArkanoidGame:
         if hits:
             self.ball.speed_y *= -1
             self.score += len(hits) * 10
-            reward += len(hits) * 0.5 # Increased reward for bricks
+            # reward += len(hits) * 0.5 # Increased reward for bricks
             if len(self.bricks) == 0:
                 self.won = True
                 terminated = True
-                reward += 100 # Bonus for winning
+                # reward += 500 - len(hits) # Bonus for winning
 
         # Ball lost
         if self.ball.rect.top > SCREEN_HEIGHT:
@@ -158,7 +158,7 @@ class ArkanoidGame:
             # Normalize distance to 0-1 range (1 is closest)
             # Max possible distance is approx SCREEN_WIDTH
             distance_reward = (1 - (dist / SCREEN_WIDTH))
-            reward += distance_reward # Add bonus (0.0 to 1.0)
+            reward += 5 * distance_reward # Add bonus (0.0 to 1.0)
             
             self.lives -= 1
             reward -= 1 # Penalty for losing a life

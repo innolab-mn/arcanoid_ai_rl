@@ -16,7 +16,7 @@ def evaluate():
     
     # Load model
     try:
-        model = PPO.load("models/arkanoid_ppo_5000000_steps", device="cuda")
+        model = PPO.load("models/arkanoid_ppo_1300000_steps", device="cuda")
     except FileNotFoundError:
         print("Model not found. Please train the agent first.")
         return

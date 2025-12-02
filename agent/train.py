@@ -49,22 +49,23 @@ def train(test_mode=False, pretrained_path=None):
             env, 
             verbose=1,
             tensorboard_log=log_dir,
-            learning_rate=2.5e-4,
-            n_steps=256 if not test_mode else 64, # 256 * 16 = 4096 steps per update
-            batch_size=256, # Larger batch size for GPU
-            n_epochs=10,
+            learning_rate=2.5e-4,          # Lowered learning rate for stability
+            n_steps=1024 if not test_mode else 64,                # Significantly increased collection size
+            batch_size=2048 if not test_mode else 64,             # Increased batch size for GPU efficiency (2048*16 = 32768 total steps)
+            n_epochs=4,                  # Decreased epochs to reduce overfitting
             gamma=0.99,
             gae_lambda=0.95,
-            clip_range=0.1,
-            ent_coef=0.01,
-            device="cuda"
+            clip_range=0.2,              # Slightly increased clip range for faster learning
+            ent_coef=0.02,    
+            device="cuda",
+            policy_kwargs=dict(net_arch=dict(pi=[512, 512], vf=[512, 512]))
         )
     
     # Train
-    total_timesteps = 5000000 if not test_mode else 1000 # Increase total steps as we run faster
-    checkpoint_callback = CheckpointCallback(save_freq=10000 // n_envs, save_path='./models/', name_prefix='arkanoid_ppo')
+    total_timesteps = 5000000000 if not test_mode else 1000 # Increase total steps as we run faster
+    checkpoint_callback = CheckpointCallback(save_freq=100000 // n_envs, save_path='./models/', name_prefix='arkanoid_ppo')
     human_feedback_callback = HumanFeedbackCallback(data_dir="data", check_freq=1000, batch_size=64, epochs=5)
-    plotting_callback = PlottingCallback(plot_freq=1000)
+    plotting_callback = PlottingCallback(plot_freq=10000, save_path="./logs/training_plot.png")
     
     callbacks = CallbackList([checkpoint_callback, human_feedback_callback, plotting_callback])
     
