@@ -42,7 +42,7 @@ class Ball(pygame.sprite.Sprite):
     def reset(self):
         self.rect.x = SCREEN_WIDTH // 2
         self.rect.y = SCREEN_HEIGHT // 2
-        self.speed_x = BALL_SPEED * (1 if np.random.rand() > 0.5 else -1)
+        self.speed_x = BALL_SPEED * np.random.uniform(-3, 3)
         self.speed_y = -BALL_SPEED
 
     def update(self):
@@ -143,11 +143,11 @@ class ArkanoidGame:
         if hits:
             self.ball.speed_y *= -1
             self.score += len(hits) * 10
-            # reward += len(hits) * 0.5 # Increased reward for bricks
+            reward += len(hits) * 0.5 # Increased reward for bricks
             if len(self.bricks) == 0:
                 self.won = True
                 terminated = True
-                # reward += 500 - len(hits) # Bonus for winning
+                reward += reward * 0.1 + 10.0 / len(hits) # Bonus for winning
 
         # Ball lost
         if self.ball.rect.top > SCREEN_HEIGHT:

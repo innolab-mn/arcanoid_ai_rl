@@ -1,6 +1,6 @@
 # Screen dimensions
 SCREEN_WIDTH = 500
-SCREEN_HEIGHT = 400
+SCREEN_HEIGHT = 300
 FPS = 60
 
 # Colors

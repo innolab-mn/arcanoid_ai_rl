@@ -58,7 +58,7 @@ def train(test_mode=False, pretrained_path=None):
             clip_range=0.2,              # Slightly increased clip range for faster learning
             ent_coef=0.02,    
             device="cuda",
-            policy_kwargs=dict(net_arch=dict(pi=[512, 512], vf=[512, 512]))
+            policy_kwargs=dict(net_arch=dict(pi=[1024, 1024], vf=[1024, 1024]))
         )
     
     # Train
